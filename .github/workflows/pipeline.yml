@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  deploy: 
+  lint-build-and-deploy: 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
