@@ -18,9 +18,13 @@ export const TaskForm: FC = () => {
   const handleSubmit = (event: SyntheticEvent<HTMLFormElement>): void => {
     event.preventDefault()
 
+    const trimmedDescription = description.trim()
+
+    if (trimmedDescription === '') return
+
     const newTask: Task = {
       id: new Date().getTime(),
-      description,
+      description: trimmedDescription,
       completed: false,
       color: '#333'
     }

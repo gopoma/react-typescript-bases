@@ -1,4 +1,5 @@
 import { TaskActionTypes, type TaskAction } from '../actions/actions'
+import { generateRelatedTaskStates } from '../helpers'
 import { type Task, type TaskState } from '../interfaces'
 
 export const taskReducer = (state: TaskState, action: TaskAction): TaskState => {
@@ -9,11 +10,7 @@ export const taskReducer = (state: TaskState, action: TaskAction): TaskState => 
 
       const tasksWithNewOne = [newTask, ...tasks]
 
-      return {
-        ...state,
-        tasks: tasksWithNewOne,
-        taskCount: tasksWithNewOne.length
-      }
+      return generateRelatedTaskStates(tasksWithNewOne)
     }
     case TaskActionTypes.toggleTask: {
       const { tasks } = state
@@ -30,12 +27,15 @@ export const taskReducer = (state: TaskState, action: TaskAction): TaskState => 
         return task
       })
 
-      return {
-        tasks: tasksWithEditedOne,
-        taskCount: tasksWithEditedOne.length,
-        completed: tasksWithEditedOne.filter((task) => task.completed).length,
-        pending: tasksWithEditedOne.filter((task) => !task.completed).length
-      }
+      return generateRelatedTaskStates(tasksWithEditedOne)
+    }
+    case TaskActionTypes.removeTask: {
+      const { tasks } = state
+      const { id } = action.payload
+
+      const tasksWithoutTargetOne = tasks.filter((task) => task.id !== id)
+
+      return generateRelatedTaskStates(tasksWithoutTargetOne)
     }
     default: {
       return state
